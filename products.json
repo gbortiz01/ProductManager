@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Camiseta Estampada",
+    "description": "Camiseta de algodón con estampado moderno",
+    "price": 1999.99,
+    "thumbnail": "url_imagen_camiseta1.jpg",
+    "code": "C009",
+    "stock": 50
+  },
+  {
+    "id": 2,
+    "title": "Jeans ",
+    "description": "Jeans elastizado para un look moderno",
+    "price": 39.99,
+    "thumbnail": "url_imagen_jeans.jpg",
+    "code": "J002",
+    "stock": 30
+  },
+  {
+    "id": 4,
+    "title": "Chaqueta de Cuero",
+    "description": "Chaqueta de cuero elegante para un look atrevido",
+    "price": 7999.99,
+    "thumbnail": "url_imagen_chaqueta.jpg",
+    "code": "CH004",
+    "stock": 20
+  },
+  {
+    "id": 5,
+    "title": "Vestido Floral",
+    "description": "Vestido con estampado floral perfecto para ocasiones especiales",
+    "price": 4999.99,
+    "thumbnail": "url_imagen_vestido.jpg",
+    "code": "V005",
+    "stock": 35
+  },
+  {
+    "id": 6,
+    "title": "Vestido Liso",
+    "description": "Vestido con liso perfecto para ocasiones especiales",
+    "price": 3999.99,
+    "thumbnail": "url_imagen_vestido_Liso.jpg",
+    "code": "V006",
+    "stock": 15
+  },
+  {
+    "id": 7,
+    "title": "Jeans Elastisado ",
+    "description": "Jeans elastizado para un look moderno casual",
+    "price": 3999.99,
+    "thumbnail": "url_imagen_jeans.jpg",
+    "code": "J006",
+    "stock": 30
+  }
+]
