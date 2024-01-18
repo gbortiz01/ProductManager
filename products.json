@@ -1,6 +1,42 @@
 [
   {
-    "id": 1,
+    "id": "40f0b11b-1c72-48b1-ae80-8adfd1af9c83",
+    "title": "Camisa lisa",
+    "description": "Camisa de algodón para un estilo elegante, lisa de gran variedad de colores",
+    "price": 22999.99,
+    "thumbnail": "url_imagen_camisalisa.jpg",
+    "code": "C011",
+    "stock": 10
+  },
+  {
+    "id": "c69a401f-98d4-453e-987c-b1f72f9f141f",
+    "title": "Camisa estampada",
+    "description": "Camisa de algodón para un estilo elegante, estampada de gran variedad de colores. Ultimo grito de la moda",
+    "price": 12999.99,
+    "thumbnail": "url_imagen_camisa_espamda.jpg",
+    "code": "C015",
+    "stock": 5
+  },
+  {
+    "id": "57e93d72-01de-4011-aefa-36166b6e1499",
+    "title": "Camisa Lino ",
+    "description": "Camisa de lino para un estilo casual, estampada de gran variedad de colores. Ultimo grito de la moda",
+    "price": 1999.99,
+    "thumbnail": "url_imagen_camisa_espamda.jpg",
+    "code": "C018",
+    "stock": 13
+  },
+  {
+    "title": "Remera estampada ",
+    "description": "Remera 100% algodon, estampada de gran variedad de colores y estampas",
+    "price": 10999.99,
+    "thumbnail": "url_imagen_remera_espamda.jpg",
+    "code": "C020",
+    "stock": 18,
+    "id": "0f63c333-0553-496e-be06-ed5aafafd203"
+  },
+  {
+    "id": "e84c119e-01fa-44a7-9145-ec2507ad326f",
     "title": "Jeans Elastisado ",
     "description": "Jeans elastizado para un look moderno casual",
     "price": 3999.99,
@@ -9,25 +45,16 @@
     "stock": 30
   },
   {
-    "id": 2,
+    "id": "4fea96d8-bc6c-4f78-b983-f8cf0ca1eb1a",
     "title": "Camisa de Algodón",
     "description": "Camisa de algodón para un estilo elegante",
     "price": 2999.99,
     "thumbnail": "url_imagen_camisa.jpg",
     "code": "C010",
-    "stock": 20
+    "stock": 150
   },
   {
-    "id": 3,
-    "title": "Zapatillas Deportivas",
-    "description": "Zapatillas deportivas para actividades físicas",
-    "price": 4999.99,
-    "thumbnail": "url_imagen_zapatillas.jpg",
-    "code": "Z001",
-    "stock": 25
-  },
-  {
-    "id": 4,
+    "id": "870e7026-1c77-4b7a-a757-b8e68a56db82",
     "title": "Reloj Analógico",
     "description": "Reloj analógico con diseño clásico",
     "price": 1999.99,
@@ -36,16 +63,16 @@
     "stock": 15
   },
   {
-    "id": 5,
+    "id": "1ecc1fca-00ba-48ba-bb05-913021614299",
     "title": "Mochila Escolar",
     "description": "Mochila escolar con múltiples compartimentos",
     "price": 1599.99,
     "thumbnail": "url_imagen_mochila.jpg",
     "code": "M003",
-    "stock": 10
+    "stock": 150
   },
   {
-    "id": 6,
+    "id": "098751dd-3c28-4f07-970a-d7393033e102",
     "title": "Jeans Elastisado ",
     "description": "Jeans elastizado para un look moderno casual",
     "price": 3999.99,

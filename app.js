@@ -1,34 +1,20 @@
-const express = require('express');
-const ProductManager = require ('./ProductManager.js');
+import express from 'express';
+import routerProd from '../Desafio Ortiz Belen/src/product.routes.js'
+import routerCart from './src/cart.routes.js';
+import { __dirname } from './path.js'
+import path from 'path'
 
-const app = express()
+
+const app = express();
 const PORT = 8080;
 
+app.use(express.json());  
+app.use(express.urlencoded({ extended: true }));
 
-const Product = new ProductManager();
-
-app.get('/Bienvenida', (req,res) =>{
-    res.send('<h1 style= "color:blue">¡BIENVENIDOS/AS!</h1>')
-})
-
-app.get('/products', (req, res) => {
-    const limit = parseInt(req.query.limit, 10);
-    const productsToSend = Product.getProduct(limit);
-    res.json(productsToSend);
-});
-
-
-app.get('/products/:pid', (req,res) =>{
-
-    const productId = parseInt(req.params.pid, 10);
-    const product = Product.getProductById(productId);
-
-    if (!product) {
-        return res.status(404).json({ error: 'PRODUCTO NO ENCONTRADO' });
-    }
-
-    res.json (product);
-})
+app.use('/api/products', routerProd); 
+app.use('/static', express.static(path.join(__dirname, '/public')))
+console.log(path.join(__dirname, '/public'))
+app.use('/api/carts', routerCart)
 
 app.listen(PORT, () => {
   console.log(`Servidor en ejecución en el puerto ${PORT}`);
