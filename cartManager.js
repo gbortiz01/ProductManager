@@ -49,8 +49,8 @@ export class cartManager {
               const content = await fs.readFile(this.cartsPath, 'utf-8');
               return JSON.parse(content);
           } catch (error) {
-              console.error('Error al leer/analizar el archivo de carritos:', error);
-              return []; // Otra opción es lanzar el error si lo prefieres: throw error;
+              console.error('Error al leer el archivo de carritos:', error);
+              return [];
           }
       }
           
