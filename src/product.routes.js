@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ProductManager } from '../ProductManager.js';
 
+
 const routerProd = Router();
 const productManager = new ProductManager('./products.json');
 
@@ -37,6 +38,7 @@ routerProd.put('/:id', async (req, res) => {
   const conf = await productManager.updateProduct(productId, req.body);
 
   if (conf) {
+
     res.status(200).send("Producto actualizado con éxito");
   } else {
     res.status(404).send("Producto no encontrado");
@@ -48,6 +50,7 @@ routerProd.delete('/:id', async (req, res) => {
   const conf = await productManager.deleteProduct(productId);
 
   if (conf) {
+
     res.status(200).send("Producto eliminado correctamente");
   } else {
     res.status(404).send("Producto no encontrado");

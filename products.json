@@ -79,5 +79,14 @@
     "thumbnail": "url_imagen_jeans.jpg",
     "code": "J006",
     "stock": 30
+  },
+  {
+    "id": "47e7aafc-d471-4ee5-9da9-339208985723",
+    "title": "Jeans Oxford ",
+    "description": "Jeans vintage, nunca pasa de moda",
+    "price": 13999.99,
+    "thumbnail": "url_imagen_jeans_Oxford.jpg",
+    "code": "J008",
+    "stock": 10
   }
 ]
