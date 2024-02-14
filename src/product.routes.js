@@ -1,60 +1,72 @@
 import { Router } from "express";
-import { ProductManager } from '../ProductManager.js';
-
+import Product from '../dao/db/models/product.model.js';
 
 const routerProd = Router();
-const productManager = new ProductManager('./products.json');
 
 routerProd.get('/', async (req, res) => {
-  const { limit } = req.query;
-  const prods = await productManager.getProduct();
-  const products = prods.slice(0, limit);
-  res.status(200).send(products);
+  try {
+      let products = await Product.find(); 
+      res.send({
+          msg: 'Productos encontrados',
+          data: products
+      });
+  } catch (err) {
+      res.status(500).json({ message: err.message }); 
+  }
 });
 
-routerProd.get('/:id', async (req, res) => {
-  const productId = req.params.id;
-  const prod = await productManager.getProductById(productId);
 
-  if (prod) {
-    res.status(200).send(prod);
-  } else {
-    res.status(404).send("Producto no encontrado");
-  }
+routerProd.get('/:id', async (req, res) => {
+    try {
+        const product = await product.findById(req.params.id);
+        if (product) {
+            res.status(200).json(product);
+        } else {
+            res.status(404).json({ message: "Producto no encontrado" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
 routerProd.post('/', async (req, res) => {
-  const productData = req.body;
-  const conf = await productManager.addProduct(productData);
-  if (conf) {
-    res.status(201).send("Producto creado");
-  } else {
-    res.status(400).send("Error al agregar el producto. Todos los campos son obligatorios.");
-  }
+    try {
+        await Product.create(req.body)
+        res.status(201).send({
+          msg : 'Producto Creado',
+          data : req.body
+        })
+    } catch (err) {
+        console.log(err)
+    }
 });
 
 routerProd.put('/:id', async (req, res) => {
-  const productId = req.params.id;
-  const conf = await productManager.updateProduct(productId, req.body);
-
-  if (conf) {
-
-    res.status(200).send("Producto actualizado con éxito");
-  } else {
-    res.status(404).send("Producto no encontrado");
-  }
+    const productId = req.params.id;
+    try {
+        const product = await Product.findByIdAndUpdate(productId, req.body, { new: true });
+        if (product) {
+            res.status(200).json(product);
+        } else {
+            res.status(404).json({ message: "Producto no encontrado" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
 routerProd.delete('/:id', async (req, res) => {
-  const productId = req.params.id;
-  const conf = await productManager.deleteProduct(productId);
-
-  if (conf) {
-
-    res.status(200).send("Producto eliminado correctamente");
-  } else {
-    res.status(404).send("Producto no encontrado");
+  try {
+      const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+      if (deletedProduct) {
+          res.status(200).json({ message: "Producto eliminado correctamente" });
+      } else {
+          res.status(404).json({ message: "Producto no encontrado" });
+      }
+  } catch (err) {
+      res.status(500).json({ message: err.message });
   }
 });
+
 
 export default routerProd;
