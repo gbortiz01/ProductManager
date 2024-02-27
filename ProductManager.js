@@ -1,21 +1,59 @@
-import { promises as fs } from 'fs' 
-import uuid4 from 'uuid4';
+import Product from './dao/db/models/product.model.js';
+import Cart from './dao/db/models/cart.model.js';
 
 export class ProductManager {
-  constructor(path) {
-    this.path = path;
-  }
+  async getProducts(queryParams) {
+    try {
+      const { limit = 10, page = 1, sort, query } = queryParams;
 
-  async getProduct() {
-    const prods = JSON.parse(await fs.readFile(this.path, 'utf-8'))
-    return prods;
-  }
+      const filter = {};
+      if (query) {
+        if (query.startsWith('category:')) {
+          const category = query.split(':')[1];
+          filter.category = category;
+        }
+        if (query === 'available') {
+          filter.availability = true;
+        }
+      }
 
+      const totalProducts = await Product.countDocuments(filter);
+
+      const totalPages = Math.ceil(totalProducts / limit);
+      const hasNextPage = page < totalPages;
+      const hasPrevPage = page > 1;
+
+      const sortOption = sort === 'desc' ? -1 : 1;
+      const sortCriteria = { price: sortOption };
+
+      const products = await Product.find(filter)
+        .sort(sortCriteria)
+        .limit(limit)
+        .skip((page - 1) * limit);
+
+      const prevLink = hasPrevPage ? `/api/products?limit=${limit}&page=${page - 1}` : null;
+      const nextLink = hasNextPage ? `/api/products?limit=${limit}&page=${page + 1}` : null;
+
+      return {
+        status: 'Productos Encontrados',
+        payload: products,
+        totalPages,
+        prevPage: hasPrevPage ? page - 1 : null,
+        nextPage: hasNextPage ? page + 1 : null,
+        page,
+        hasPrevPage,
+        hasNextPage,
+        prevLink,
+        nextLink,
+      };
+    } catch (error) {
+      console.error('Error al obtener los productos:', error);
+      return { status: 'error', error: 'Error interno del servidor' };
+    }
+  }
+  
   async getProductById(id) {
-    const fileContent = await fs.readFile(this.path, 'utf-8');
-    const prods = JSON.parse(fileContent);
-    const prod = prods.find(product => product.id === id);
-    return prod;
+    return await Product.findById(id);
   }
 
   async addProduct(productData) {
@@ -23,44 +61,64 @@ export class ProductManager {
     if (!title || !description || !price || !code || !stock) {
       return false;
     }
-    const newProduct = {
-      id: uuid4(),
+    const newProduct = new Product({
       title,
       description,
       price,
       thumbnail,
       code,
       stock,
-    };
-    const prods = await this.getProduct();
-    prods.push(newProduct);
-    await fs.writeFile(this.path, JSON.stringify(prods, null, 2));
+    });
+    await newProduct.save();
     return true;
   }
 
   async updateProduct(id, updatedFields) {
-    const prods = await this.getProduct();
-    const index = prods.findIndex(product => product.id === id);
-
-    if (index !== -1) {
-      Object.assign(prods[index], updatedFields);
-      await fs.writeFile(this.path, JSON.stringify(prods, null, 2));
-      return true;
-    } else {
-      return false;
+    try {
+      await Product.findByIdAndUpdate(id, updatedFields);
+      return 'Producto Actualizo';
+    } catch (error) {
+      return 'No se pudo actualizar producto';
     }
   }
 
   async deleteProduct(id) {
-    const prods = await this.getProduct();
-    const index = prods.findIndex(product => product.id === id);
+    try {
+      await Product.findByIdAndDelete(id);
+      return 'Producto Eliminado';
+    } catch (error) {
+      return 'No se ha podido eliminar producto';
+    }
+  }
 
-    if (index !== -1) {
-      prods.splice(index, 1);
-      await fs.writeFile(this.path, JSON.stringify(prods, null, 2));
+  async addProductToCart(cartId, productId) {
+    try {
+      let cart = await Cart.findById(cartId);
+      if (!cart) {
+        const currentDate = new Date().toISOString(); // Obtenemos la fecha actual
+        cart = new Cart({ date: currentDate }); // Creamos un nuevo carrito con la fecha actual
+      }
+  
+      const product = await this.getProductById(productId);
+      if (!product) {
+        return false;
+      }
+  
+      const existingProductIndex = cart.products.findIndex(item => item.product.toString() === productId);
+      if (existingProductIndex !== -1) {
+        cart.products[existingProductIndex].quantity++;
+      } else {
+        cart.products.push({ product: productId });
+      }
+  
+      await cart.save();
       return true;
-    } else {
+    } catch (error) {
+      console.error('Error al agregar producto al carrito:', error);
       return false;
     }
   }
+  
+
+  
 }

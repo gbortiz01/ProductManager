@@ -1,24 +1,23 @@
 import { Router } from "express";
-import Product from '../dao/db/models/product.model.js';
+import {ProductManager } from '../ProductManager.js';
 
 const routerProd = Router();
 
 routerProd.get('/', async (req, res) => {
-  try {
-      let products = await Product.find(); 
-      res.send({
-          msg: 'Productos encontrados',
-          data: products
-      });
-  } catch (err) {
-      res.status(500).json({ message: err.message }); 
-  }
-});
+    try {
+      const productManager = new ProductManager();
+      const products = await productManager.getProducts(req.query);
+      res.status(200).json(products);
+    } catch (err) {
+      console.error('Error al obtener los productos:', err);
+      res.status(500).json({ status: 'error', error: 'Error interno del servidor' });
+    }
+  });
 
 
 routerProd.get('/:id', async (req, res) => {
     try {
-        const product = await product.findById(req.params.id);
+        const product = await productManager.getProductById(req.params.id);
         if (product) {
             res.status(200).json(product);
         } else {
@@ -31,22 +30,27 @@ routerProd.get('/:id', async (req, res) => {
 
 routerProd.post('/', async (req, res) => {
     try {
-        await Product.create(req.body)
-        res.status(201).send({
-          msg : 'Producto Creado',
-          data : req.body
-        })
+        const createdProduct = await productManager.addProduct(req.body);
+        if (createdProduct) {
+            res.status(201).send({
+                msg : 'Producto Creado',
+                data : req.body
+            });
+        } else {
+            res.status(400).json({ message: 'Datos de producto incorrectos' });
+        }
     } catch (err) {
-        console.log(err)
+        console.log(err);
+        res.status(500).json({ message: 'Error al crear el producto' });
     }
 });
 
 routerProd.put('/:id', async (req, res) => {
     const productId = req.params.id;
     try {
-        const product = await Product.findByIdAndUpdate(productId, req.body, { new: true });
-        if (product) {
-            res.status(200).json(product);
+        const updatedProduct = await productManager.updateProduct(productId, req.body);
+        if (updatedProduct) {
+            res.status(200).json(updatedProduct);
         } else {
             res.status(404).json({ message: "Producto no encontrado" });
         }
@@ -57,7 +61,7 @@ routerProd.put('/:id', async (req, res) => {
 
 routerProd.delete('/:id', async (req, res) => {
   try {
-      const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+      const deletedProduct = await productManager.deleteProduct(req.params.id);
       if (deletedProduct) {
           res.status(200).json({ message: "Producto eliminado correctamente" });
       } else {

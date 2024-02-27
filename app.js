@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use('/api', homeRoute);
-app.use('/api/products', routerProd); 
+app.use('/api/product', routerProd); 
 app.use('/api/carts', routerCart);
 
 const io = new Server(server);
