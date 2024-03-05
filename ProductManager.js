@@ -1,5 +1,4 @@
 import Product from './dao/db/models/product.model.js';
-import Cart from './dao/db/models/cart.model.js';
 
 export class ProductManager {
   async getProducts(queryParams) {
@@ -90,35 +89,6 @@ export class ProductManager {
       return 'No se ha podido eliminar producto';
     }
   }
-
-  async addProductToCart(cartId, productId) {
-    try {
-      let cart = await Cart.findById(cartId);
-      if (!cart) {
-        const currentDate = new Date().toISOString(); // Obtenemos la fecha actual
-        cart = new Cart({ date: currentDate }); // Creamos un nuevo carrito con la fecha actual
-      }
-  
-      const product = await this.getProductById(productId);
-      if (!product) {
-        return false;
-      }
-  
-      const existingProductIndex = cart.products.findIndex(item => item.product.toString() === productId);
-      if (existingProductIndex !== -1) {
-        cart.products[existingProductIndex].quantity++;
-      } else {
-        cart.products.push({ product: productId });
-      }
-  
-      await cart.save();
-      return true;
-    } catch (error) {
-      console.error('Error al agregar producto al carrito:', error);
-      return false;
-    }
-  }
-  
 
   
 }
