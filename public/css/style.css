@@ -76,3 +76,61 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+
+
+.logout-link {
+  color: red; 
+  text-decoration: none;
+  margin-top: 10px; 
+  display: block; 
+}
+
+.logout-link:hover {
+  color: darkred; 
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.registro-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.registro-label {
+  font-weight: bold;
+}
+
+.registro-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.registro-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.registro-button:hover {
+  background-color: #45a049;
+}

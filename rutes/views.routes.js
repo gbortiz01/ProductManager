@@ -4,15 +4,15 @@ import Product from "../dao/db/models/product.model.js";
 
 const ViewRoute = Router();
 
-ViewRoute.get('/login-view', (req, res) => {
+ViewRoute.get('/login', (req, res) => {
     res.render('login');
 });
 
-ViewRoute.get('/register-view', (req, res) => {
+ViewRoute.get('/register', (req, res) => {
     res.render('register');
 });
 
-ViewRoute.get('/perfil-view', async (req, res) => {
+ViewRoute.get('/perfil', async (req, res) => {
     try {
         const products = await Product.find().lean();
         res.render('profile', { user: req.session.user, products });

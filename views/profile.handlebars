@@ -2,17 +2,15 @@
     <h1>Bienvenido/a, {{ user.email }}</h1>
     <p> {{ user.role }}</p>
     
-<h2>Lista de Productos</h2>
-<ul>
-    {{#each products}}
-        <li>{{title}} - ${{price}}
-            <a href="api/products/{{_id}}">Detalles</a>
-        </li>
-    {{/each}}
-</ul>
+    <h2>Lista de Productos</h2>
+    <ul>
+        {{#each products}}
+            <li>{{title}} - ${{price}}
+                <a href="/api/products/{{_id}}">Detalles</a>
+            </li>
+        {{/each}}
+    </ul>
+    <a href="/api/chat">¿Tenes una consulta? Escribinos</a>
+ <a href="/api/view/login" class="logout-link">Cerrar sesión</a>
 
-</ul>
-
-   
-    <a href="/api/view/login-view">Logout</a>
 </div>

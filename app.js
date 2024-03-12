@@ -1,10 +1,10 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
-import routerProd from './src/product.routes.js'
-import routerCart from './src/cart.routes.js';
-import homeRoute from './src/home.route.js'
-import ViewRoute from './src/views.routes.js';
-import AuthRoute from './src/auth.routes.js';
+import routerProd from './rutes/product.routes.js'
+import routerCart from './rutes/cart.routes.js';
+import homeRoute from './rutes/home.route.js'
+import ViewRoute from './rutes/views.routes.js';
+import AuthRoute from './rutes/auth.routes.js';
 import { __dirname } from './path.js'
 import path from 'path'
 import http from 'http';
@@ -14,6 +14,8 @@ import Message from './dao/db/models/chat.model.js';
 import session from 'express-session'; 
 import FileStore from 'session-file-store';
 import MongoStore from 'connect-mongo';
+import {initPassport} from './rutes/config/passport.config.js'
+import passport  from 'passport';
 
 const app = express ();
 const server = http.createServer(app); 
@@ -41,6 +43,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+
+initPassport()
+
+app.use(passport.initialize());
+app.use(passport.session())
 
 app.get('/sessionSet', (req, res) =>{
   req.session.user = 'username'
