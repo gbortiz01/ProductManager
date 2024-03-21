@@ -1,5 +1,7 @@
 import { Router } from "express";
 import User from "../dao/db/models/user.model.js";
+
+
 import passport from "passport";
 
 const authRouter = Router();
@@ -7,6 +9,10 @@ const authRouter = Router();
 authRouter.post('/register', async (req, res) => {
     try {
         const newUser = await User.create(req.body);
+        const newCart = await Cart.create({ products: [], user: newUser._id });
+        newUser.cart = newCart._id;
+        await newUser.save();
+
         res.redirect('/api/view/login');
     } catch (error) {
         console.error('Error al registrar usuario:', error);
@@ -16,8 +22,18 @@ authRouter.post('/register', async (req, res) => {
 
 authRouter.get('/register/github', passport.authenticate('github'));
 
-authRouter.get('/register/github/callback', passport.authenticate('github', { failureRedirect: '/api/view/login' }), (req, res) => {
-    res.redirect('/api/view/perfil');
+authRouter.get('/register/github/callback', passport.authenticate('github', { failureRedirect: '/api/view/login' }), async (req, res) => {
+    try {
+        const githubUser = req.user;
+        const newCart = await Cart.create({ products: [], user: githubUser._id });
+        githubUser.cart = newCart._id;
+        await githubUser.save();
+
+        res.redirect('/api/view/perfil');
+    } catch (error) {
+        console.error('Error al procesar la autenticación de GitHub:', error);
+        res.status(500).send('Error al procesar la autenticación de GitHub');
+    }
 });
 
 authRouter.post('/login', (req, res, next) => {
