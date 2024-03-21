@@ -1,17 +1,18 @@
 <div class="container">
     <form class="registro-form" action="/api/session/register" method="POST">
         <h1>Registrarse</h1>
-        <label for="username" class="registro-label">Nombre de usuario:</label><br>
-        <input type="text" id="username" name="username" class="registro-input" required><br>
-        <label for="name" class="registro-label">Nombre:</label><br>
-        <input type="text" id="name" name="name" class="registro-input" required><br>
+        <label for="first_name" class="registro-label">Nombre:</label><br>
+        <input type="text" id="first_name" name="first_name" class="registro-input" required><br>
+        <label for="last_name" class="registro-label">Apellido:</label><br>
+        <input type="text" id="last_name" name="last_name" class="registro-input" required><br>
         <label for="email" class="registro-label">Correo Electrónico:</label><br>
         <input type="email" id="email" name="email" class="registro-input" required><br>
         <label for="password" class="registro-label">Contraseña:</label><br>
         <input type="password" id="password" name="password" class="registro-input" required><br>
+        <label for="age" class="registro-label">Edad:</label><br>
+        <input type="number" id="age" name="age" class="registro-input" required><br>
         <button type="submit" class="registro-button">Registrarse</button>
         <p>O regístrate con:<a href="/api/session/register/github" class="github-button">GitHub</a></p>
         <p>Si tienes cuenta, accede: <a href="/api/view/login">Login</a></p>
     </form>
 </div>
-

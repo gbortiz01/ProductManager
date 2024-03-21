@@ -1,13 +1,13 @@
 <div>
-    <h1>Bienvenido/a, {{ user.email }}</h1>
-    <p> {{ user.role }}</p>
+    <h1>Bienvenido/a, {{user.first_name }}</h1>
+    <p> {{user.role}}</p>
     
     <h2>Lista de Productos</h2>
     <ul>
-        {{#each products}}
-            <li>{{title}} - ${{price}}
-                <a href="/api/products/{{_id}}">Detalles</a>
-            </li>
+       {{#each products}}
+    <li>{{this._doc.title}} - ${{this._doc.price}}
+        <a href="/api/products/{{this._doc._id}}">Detalles</a>
+    </li>
         {{/each}}
     </ul>
     <a href="/api/chat">¿Tenes una consulta? Escribinos</a>
