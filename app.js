@@ -1,85 +1,76 @@
 import express from 'express';
-import handlebars from 'express-handlebars';
-import routerProd from './rutes/product.routes.js'
-import routerCart from './rutes/cart.routes.js';
-import homeRoute from './rutes/home.route.js'
-import ViewRoute from './rutes/views.routes.js';
-import AuthRoute from './rutes/auth.routes.js';
-import { __dirname } from './path.js'
-import path from 'path'
+import exphbs from 'express-handlebars';
+import path from 'path';
 import http from 'http';
 import { Server } from 'socket.io';
-import DataBase from './dao/db/db.js'
-import Message from './dao/db/models/chat.model.js';
-import session from 'express-session'; 
-import FileStore from 'session-file-store';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import {initPassport} from './rutes/config/passport.config.js'
-import passport  from 'passport';
+import passport from 'passport';
+import dotenv from 'dotenv';
 
-const app = express ();
-const server = http.createServer(app); 
+import { __dirname as rootDirname } from './path.js';
 
+import { initPassport } from './src/rutes/config/passport.config.js';
+import homeRoute from './src/rutes/home.route.js';
+import routerProd from './src/rutes/product.routes.js';
+import routerCart from './src/rutes/cart.routes.js';
+import viewRoute from './src/rutes/views.routes.js'; 
+import authRoute from './src/rutes/auth.routes.js'; 
+import DataBase from './dao/db/db.js';
+import Message from './dao/db/models/chat.model.js';
 
-const PORT = 8080 || process.env.PORT
+dotenv.config();
 
-app.use(express.static(__dirname+"/public"));
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
+const PORT = process.env.PORT || 8080;
 
+app.use(express.static(path.join(rootDirname, 'public')));
 
-app.engine('handlebars', handlebars.engine())
+const hbs = exphbs.create();
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname+'/views'));
+app.set('views', path.join(rootDirname, 'src', 'views'));
 
-app.use(express.json());  
-app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+const sessionStore = MongoStore.create({
+  mongoUrl: process.env.MONGO_URI,
+  mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+  ttl: 15 * 60,
+  crypto: {
+    secret: process.env.SESSION_SECRET
+  },
+  touchAfter: 24 * 3600,
+});
 
 app.use(session({
-  store:MongoStore.create({
-    mongoUrl: 'mongodb+srv://giselabelenortiz:3pPbZG0naeHtWTVA@cluster0.ab5jnzr.mongodb.net/ecommerce',
-    ttl:10
-  }),
-  secret:"adminCod3r123",
-  resave: true,
-  saveUninitialized: true
-}))
-
-initPassport()
+  store: sessionStore,
+  secret: process.env.SESSION_SECRET,
+  resave: false, 
+  saveUninitialized: false, 
+  cookie: {
+    maxAge: 1000 * 60 * 15 
+  },
+}));
 
 app.use(passport.initialize());
-app.use(passport.session())
+app.use(passport.session()); 
 
-app.get('/sessionSet', (req, res) =>{
-  req.session.user = 'username'
-  req.session.admin = true
-
-  res.send('Usuario Logueado')
-
-})
-
-app.get('/sessionGet', (req,res) =>{
-  res.send(req.session.user)
-})
-
-app.get('/logout', (req,res) =>{
-  req.session.destroy((err)=>{
-    if(err) res.send('Error en Logout')
-    res.send('Logout ok!')
-  })
-})
+initPassport();
 
 app.use('/api', homeRoute);
-app.use('/api/product', routerProd); 
+app.use('/api/product', routerProd);
 app.use('/api/carts', routerCart);
-app.use('/api/view', ViewRoute);
-app.use('/api/session', AuthRoute);
-
-
-const io = new Server(server);
+app.use('/api/view', viewRoute); // Corregido el nombre del enrutador
+app.use('/api/session', authRoute); // Corregido el nombre del enrutador
 
 io.on('connection', (socket) => {
   console.log('Usuario conectado');
-  socket.emit('wellcome', 'Bienvenido Cliente nuevo');
+  socket.emit('welcome', 'Bienvenido Cliente nuevo');
 
   socket.on('new-message', async (data) => {
     try {
@@ -89,15 +80,14 @@ io.on('connection', (socket) => {
       });
       await newMessage.save();
       const messages = await Message.find();
-      io.sockets.emit('message-all', messages);
+      io.emit('message-all', messages);
     } catch (error) {
       console.error('Error al guardar el mensaje en la base de datos:', error);
     }
   });
 });
 
-
 server.listen(PORT, () => {
   console.log(`Servidor en ejecución en el puerto ${PORT}`);
-  DataBase.connect()
+  DataBase.connect();
 });

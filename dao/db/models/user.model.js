@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import Cart from './cart.model.js'; 
 
 const userSchema = new mongoose.Schema({
     first_name: {
@@ -23,11 +24,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    cart: {
+    carts: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cart',
-        required: true
-    },
+        ref: 'Cart'
+    }],
+
     role: {
         type: String,
         enum: ['user', 'admin'],

@@ -10,4 +10,5 @@ const connect = () => {
     });
 };
 
-export default { connect };
+export default  {connect};
+

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Product from './product.model.js'; 
 
 const CartSchema = new mongoose.Schema({
     date: {
@@ -7,9 +6,10 @@ const CartSchema = new mongoose.Schema({
         default: Date.now 
     },
     products: [{
-        product: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Product" 
+        product: { 
+            type: mongoose.Schema.Types.ObjectId,  
+            ref: 'Product',  
+            required: true
         },
         quantity: {
             type: Number,
@@ -18,9 +18,12 @@ const CartSchema = new mongoose.Schema({
     }]
 });
 
-CartSchema.pre('find', function(){
-    this.populate("products.product");
+CartSchema.pre('find', function(next) {
+    this.populate('products.product');
+    next();
 });
+
+CartSchema.index({ 'products.product': 1 }, { unique: false });
 
 const Cart = mongoose.model('Cart', CartSchema);
 
